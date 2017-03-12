@@ -1,7 +1,5 @@
 package org.tp.interfaces;
 
-public interface CourseItf {
-	
-	
+public interface CourseItf {	
 
 }
