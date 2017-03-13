@@ -1,0 +1,86 @@
+SUJET
+
+L'objectif du TP est de fournir les objets de base d'une application permettant de gérer 
+des championnats de courses autos et motos. Les données sont les suivantes :
+
+- Un championnat comprends un certain nombre de courses (minimum 2)
+
+- Une course est composée de véhicules du même type, de même catégorie et de 
+même cylindrée.
+
+- Une course a lieu à une certaine date.
+	// attribut #date : Date
+	
+- Il y a au minimum 2 motos par course ou 4 voitures par course suivant le cas.
+	// attribut-constante #MIN_PARTICIPANTS : int
+
+- Une course de de moto est limitée à 20 participants, une course de voiture à 16.
+	// attribut-constante #MAX_PARTICIPANTS : int
+
+- Un pilote (nom, prénom, nationnalité) est âgé de 18 ans minimum.
+
+- Il peut avoir un permis voiture et/ou moto.
+	// attribut permisList de String ???
+	
+- Un pilote doit avoir le bon permis pour participer à une course
+	// 
+	
+- Un ensemble de véhicules de course et de motos sont référencés pour participer
+à des courses
+	// ça veut dire quoi concrètement???
+	
+- Une voiture doit s'engager dans un championnat complet.
+	// hypothèse 'voiture' = 'véhicule'
+	// implique qu'une inscription (méthode) 'part' du championnat, pas de course.
+	
+- Une fonctionnalité 'arrivée course' permet de rentrer le temps de chaque
+participant. Ensuite elle affiche le classement de la course et du championnat.
+
+- Les pilotes gagnent 10 pts par course gagnée, 8 en seconde place et 2 en troisième.
+	// constantes de l'interface Course ?
+	
+- Une voiture est caractérisée par une cylindrée, son nombre de roues motrices,
+son modèle (sport ou classique), une vitesse max, son carburant.
+	// int cylindree, rouesMotrices
+	// double VMax
+	// String carburant
+	// attribut-constante-contrainte String[] modeleTab {"sport", "classique"}
+
+- Une moto est caractérisée par sa cylindrée, une vitesse max, son type (sportive,
+enduro, trial), son poids.
+	// attribut-constante-contrainte String[] typeTab {"sportive", "enduro", "trial"}
+	//
+	
+	
+	
+Réalisation :
+
+Vous devez proposer une solution pour gérer les données demandées.
+Les actions possibles sont :
+
+- Générer un ensemble de voitures et de motos
+	// c'est ça que ça veut dire référencer ?
+	// ArrayList ensembleMotos, ensembleVoitures
+
+- Générer un ensemble de pilotes
+	// ArrayList ensemblePilotes
+	
+- Créer des courses et des championnats à partir de ces éléments
+	//
+
+- Rentrer les résultats des courses dans l'ordre de leur organisation
+
+- Afficher les résultats des courses et des championnats
+
+- Donner le vainqueur de chaque championnat une fois toutes les courses de tous
+les championnats effectués
+
+Les diverses actions seront testées dans un programme principal.
+
+Utilisez au maximum ce qui a été vu en cours : Interfaces, héritage, listes, etc.
+
+
+page 2 (critères) incommin
+
+
+	
