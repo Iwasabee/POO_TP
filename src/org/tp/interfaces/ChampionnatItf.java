@@ -6,7 +6,6 @@ public interface ChampionnatItf {
 	
 	public final int COURSES_MIN = 2;
 	
-	
 	/**
 	 * Retourne la Queue des courses classées par date
 	 * @return Queue<CourseItf>
