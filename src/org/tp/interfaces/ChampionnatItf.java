@@ -1,16 +1,22 @@
 package org.tp.interfaces;
 
-import java.util.Queue;
+import java.util.Collection;
+
+/**
+ * Interface commune pour à implémenter par un objet Championnat
+ * @author Élodie Mariano, Philippe Normand, Roux Raverdy
+ *
+ */
 
 public interface ChampionnatItf {
 	
 	public final int COURSES_MIN = 2;
 	
 	/**
-	 * Retourne la Queue des courses classées par date
+	 * Retourne les courses composant le championnat
 	 * @return Queue<CourseItf>
 	 */
-	public Queue<CourseItf> getCourseQueue();
+	public Collection<CourseItf> getCourses();
 	
 	// contraintes sur les véhicules
 	public String getType(); // moto ou voiture

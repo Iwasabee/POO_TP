@@ -1,7 +1,7 @@
 package org.tp.interfaces;
 
+import java.util.Collection;
 import java.util.Date;
-import java.util.Queue;
 
 public interface CourseItf {	
 	
@@ -10,7 +10,7 @@ public interface CourseItf {
 	
 	// autorise les doublons (temps 00:00 avant la course)
 	// mais PAS les valeurs null
-	public Queue<EquipageItf> getEquipagesQueue();
+	public Collection<EquipageItf> getEquipages();
 	
 	// contraintes
 	public int getParticipantsMin();
