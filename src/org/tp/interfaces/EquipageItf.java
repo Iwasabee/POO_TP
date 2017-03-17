@@ -1,7 +1,6 @@
 package org.tp.interfaces;
 
 import java.util.Date;
-import java.util.Map;
 
 // capsule pour associer pilote et véhicule pour un championnat
 
