@@ -1,14 +1,18 @@
 package org.tp.mariano.classes;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.tp.interfaces.VehiculeItf;
 
 /**
  * La classe abstraite <class>Vehicule</class> implémente <interface>VehiculeItf</inteface>.</br>
- * Ses attributs (private) :
+ * Ses attributs principaux :
  * <ul>
  * <li>vitesseMax : double</li>
  * <li>cylindree : int</li>
  * <li>modele : String</li>
+ * <li>modeles : String[]</li>
  * </ul>
  * @author Élodie 
  * @see <interface>VehiculeItf</inteface> 
@@ -17,11 +21,63 @@ import org.tp.interfaces.VehiculeItf;
  */
 public abstract class Vehicule implements VehiculeItf {
 	
+	// ATTRIBUTS
+	
 	private static final long serialVersionUID = 1066567529758464271L;
 	
-	private double vitesseMax;
-	private int cylindree;
-	private String modele;
+	private static int vehiculesCompte = 0;
+	private final int vehiculeId;
+	
+	private String fichier = "";
+	
+	protected List<String> modeles;
+	
+	protected double vitesseMax;
+	protected int cylindree;
+	protected String modele;
+	
+	
+	// CONSTRUCTEUR
+	
+	public Vehicule () {
+		vehiculesCompte ++;
+		this.vehiculeId = vehiculesCompte;
+		this.fichier = this.getClass().getName() + this.vehiculeId;
+		this.vitesseMax = 0;
+		this.cylindree = 0;
+		this.modele = "";
+	}
+	
+	
+	// MÉTHODES
+	
+	@Override
+	public String toString() {
+		return ("Vehicule [" +
+				"vehiculeId=" + vehiculeId + 
+				"\nmodeles=" + modeles + 
+				"\nvitesseMax=" + vitesseMax + 
+				"\ncylindree=" + cylindree + 
+				"\nmodele=" + modele + "]"
+				);
+	}
+	
+	
+	public String fichier(){
+		return this.fichier;
+	}
+
+
+	/**
+	 * 
+	 * @return liste des modeles possibles pour ce type
+	 */
+	public List<String> modeles(){
+		return this.modeles;
+	}
+	
+	
+	// MÉTHODES D'INTERFACE
 
 	@Override
 	public double getVitesseMax() {

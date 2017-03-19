@@ -7,10 +7,11 @@ import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-
+import org.tp.interfaces.ChampionnatItf;
 // à tester
-import org.tp.interfaces.*;
-import org.tp.mariano.*;
+import org.tp.interfaces.CourseItf;
+import org.tp.mariano.classes.Championnat;
+import org.tp.mariano.classes.CourseMoto;
 
 
 /*
@@ -106,11 +107,13 @@ public class TestsSujet {
     
     @Test
     public void lesPilotesDoiventGagnerDesPointsParCourse() {
-    	// dérouler une course
+//    	ChampionnatItf champ = new Championnat();
+//    	champ.setType("moto");
+//    	CourseItf course = new CourseMoto();
+    	
     	//assertEquals(10, course.get(1).getScore())
     	//assertEquals(8, course.get(1).getScore())
     	//assertEquals(2, course.get(3).getScore())
-    	fail("Not yet implemented");
     }
     
     @Test

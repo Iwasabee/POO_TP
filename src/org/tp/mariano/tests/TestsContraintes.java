@@ -1,14 +1,21 @@
 package org.tp.mariano.tests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 // à tester
-import org.tp.interfaces.*;
-import org.tp.mariano.classes.*;
+import org.tp.interfaces.ChampionnatItf;
+import org.tp.interfaces.CourseItf;
+import org.tp.interfaces.EquipageItf;
+import org.tp.interfaces.VehiculeItf;
+import org.tp.mariano.classes.Championnat;
+import org.tp.mariano.classes.CourseMoto;
+import org.tp.mariano.classes.Equipage;
+import org.tp.mariano.classes.Moto;
+import org.tp.mariano.classes.Pilote;
 
 /**
  * Traduction bête et méchante des phrases du sujet en tests
@@ -21,12 +28,27 @@ public class TestsContraintes {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
+	
+//	@Test(expected=IndexOutOfBoundsException.class)
+//	public void testIndexOutOfBoundsException() {
+//	    ArrayList emptyList = new ArrayList();
+//	    Object o = emptyList.get(0);
+//	}
 
-	@Test
+	/*@Test
 	public void uneCourseDoitContenirUneSeulefoisUnVehicule() {
 		// tester l'inscription d'un véhicule déja inscrit avec un autre pilote
-		fail("Not yet implemented");
-	}
+		CourseItf c = new CourseMoto();
+		// on crée deux équipages avec un même véhicule
+		VehiculeItf m = new Moto();
+		EquipageItf e1 = new Equipage(new Pilote(), m);
+		EquipageItf e2 = new Equipage(new Pilote(), m);
+		// on les inscrit pour la course
+		c.inscrire(e1);
+		c.inscrire(e2);
+		// on vérifie que la 2ème inscription a été rejetée
+		assertEquals(1, c.getEquipages().size());
+	} */
 	
 	@Test
 	public void uneCourseDoitContenirUneSeulefoisUnPilote() {

@@ -2,6 +2,7 @@ package org.tp.interfaces;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 /**
@@ -11,9 +12,17 @@ import java.util.Collection;
  */
 public interface CourseItf extends Serializable {	
 	
-	// date du départ yyyy MM dd hh mm ss (ms?)
 	// LocalDate standard JDK 8
+	/**
+	 * Date à laquelle s'est déroulée ou se déroulera cette course<br/>
+	 * @return LocalDate : yyyy-MM-dd
+	 */
 	public LocalDate getDate();
+	/**
+	 * Date précise du départ 
+	 * @return LocalDateTime : yyyy MM dd hh mm ss SSS
+	 */
+	public LocalDateTime getDepart();
 	
 	// autorise les doublons (temps 00:00 avant la course)
 	// mais PAS les valeurs null
@@ -26,7 +35,7 @@ public interface CourseItf extends Serializable {
 	// Entrer les temps pour tous les participants
 	public void entrerResultats();
 	
-	// Pour tous les pilotes et dans l'ordre (logique)
+	// Pour tous les pilotes et dans l'ordre (logique) 
 	// classement | pilote | score | temps
 	public void afficherResultats();
 	

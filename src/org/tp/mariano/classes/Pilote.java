@@ -11,24 +11,28 @@ import org.tp.mariano.exceptions.PasMajeurException;
 
 public class Pilote implements PiloteItf {
 	
-	private static final long serialVersionUID = 214171758734551995L;
-	
 	// ATTRIBUTS
+	
+    private static int pilotesCompte = 0;
+	private int piloteId;
+	private String fichier;
+	
+	private static final long serialVersionUID = 214171758734551995L;
+
 	private String nom;
 	private String prenom;
 	private String nationalite;
 	private LocalDate dateDeNaissance; 
 	private List<String> permis; // "voiture", "moto"
-	private int piloteId;
-	
-    private static int pilotesCompte = 0;
+
 	
 	// CONSTRUCTEURS
 
 	public Pilote() {
 		pilotesCompte ++;
 		this.piloteId = pilotesCompte;
-		this.nom = "pilote n° " + pilotesCompte;
+		this.fichier = "pilote n° " + this.piloteId;
+		this.nom = "pilote n° " + this.piloteId;
 		this.prenom = "";
 		this.nationalite = "";
 		this.dateDeNaissance = null;

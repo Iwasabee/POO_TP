@@ -7,10 +7,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
 import org.tp.interfaces.ChampionnatItf;
+import org.tp.interfaces.VehiculeItf;
+import org.tp.mariano.exceptions.TypeException;
 
 /**
  * Un Championnat est composé de Courses, au minimum 2, auxquelles participent 
@@ -34,10 +37,15 @@ public class Championnat implements ChampionnatItf{
 	
 	private static final long serialVersionUID = 4256717921797117801L;
 	
+	// types connus
+	private static final String[] types = {"moto", "voiture"};
+	
 	private String nom;
 	// ordonnée par la date de départ des courses
 	private PriorityQueue<Course> courses; 
-	private String type; // précise le type de véhicule (Voiture, Moto)
+	
+	// contraintes
+	private Class<? extends Vehicule> type; // précise le type de véhicule (Voiture, Moto)
 	private int cylindree; // précise la cylindrée autorisé
 	private String modele; // véhicule sportif, classique...
 		
@@ -50,7 +58,7 @@ public class Championnat implements ChampionnatItf{
 	public Championnat() {
 		this.nom = "";
 		this.courses = null;
-		this.type = "";
+		this.type = null;
 		this.cylindree = 0;
 		this.modele = "";
 	}
@@ -59,12 +67,25 @@ public class Championnat implements ChampionnatItf{
 	
 	@Override
 	public String toString() {
-		return "Championnat [courses=" + courses + ", type=" + type + ", cylindree=" + cylindree + ", modele=" + modele
-				+ "]";
+		return "Championnat [courses = " + courses + 
+				"\ntype=" + type + 
+				"\ncylindree=" + cylindree + 
+				"\nmodele=" + modele +
+				"]";
 	}
 	
 	public String getNom() {
 		return this.nom;
+	}
+
+	public boolean setModele(String modele) {
+		this.modele  = modele;
+		return true;
+	}
+
+	public boolean setCylindree(int cylindree) {
+		this.cylindree = cylindree;
+		return true;
 	}
 	
 	// contrainte : 2 courses ne doivent pas se dérouler le même jour
@@ -91,7 +112,7 @@ public class Championnat implements ChampionnatItf{
 
 	@Override
 	public String getType() {
-		return this.type;
+		return this.type.getName();
 	}
 
 	@Override
