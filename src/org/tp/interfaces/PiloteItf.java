@@ -1,11 +1,12 @@
 package org.tp.interfaces;
 
-public interface PiloteItf {
+import java.io.Serializable;
+
+public interface PiloteItf extends Serializable {
 	
 	public String getNom();
 	public String getPrenom();
-	// tip : avoir une Date en attribut
-	public int getAge();
+	public int getAge(); // tip : avoir une Date en attribut
 	public String getNationalite();
 	
 	// contraintes de permis

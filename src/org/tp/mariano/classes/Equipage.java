@@ -1,10 +1,10 @@
 package org.tp.mariano.classes;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
 
-import org.tp.interfaces.*;
+import org.tp.interfaces.EquipageItf;
+import org.tp.interfaces.PiloteItf;
+import org.tp.interfaces.VehiculeItf;
 
 /**
  * 
@@ -13,12 +13,23 @@ import org.tp.interfaces.*;
  */
 public class Equipage implements EquipageItf {
 	
+	private static final long serialVersionUID = -3921934647760086873L;
+	
 	private PiloteItf pilote;
 	private VehiculeItf vehicule;
 	
-	// Map qui associe à la Date de départ d'une course le temps réalisé
-	// par l'équipage lors de cette course
-	private Map<Date, Date> tempsCourses;
+	// CONSTRUCTEUR
+	public Equipage(Pilote p, Vehicule v) {
+		// 1. il faut un Pilote et un Vehicule
+	}
+
+	// MÉTHODES
+	
+	public boolean rentrerTemps(LocalDateTime temps) {
+		return false;
+	}
+	
+	// MÉTHODES D'INTERFACE
 
 	@Override
 	public PiloteItf getPilote() {
@@ -29,17 +40,4 @@ public class Equipage implements EquipageItf {
 	public VehiculeItf getVehicule() {
 		return this.vehicule;
 	}
-
-	@Override
-	public Date getTempsCourse(Date date) {
-		return this.tempsCourses.get(date);
-	}
-
-	@Override
-	public Map<Date, Date> getTempsCourses() {
-		if (this.tempsCourses == null)
-			this.tempsCourses = new HashMap<Date, Date>();
-		return this.tempsCourses;
-	}
-
 }

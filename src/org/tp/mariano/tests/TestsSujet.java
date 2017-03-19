@@ -1,37 +1,45 @@
 package org.tp.mariano.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
-/*
- * Tentative de transcription du sujet en tests
- */
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+// à tester
+import org.tp.interfaces.*;
+import org.tp.mariano.*;
+
+
+/*
+ * Tentative de transcription du sujet en tests
+ */
 public class TestsSujet {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		fail("Not yet implemented");
+		int i = 0, j = 0;
+		List pilotes = new ArrayList();
+		for (i=0; i<1; i++){
+			//pilotes.add(new Pilote())
+		}
 	}
 	
     @Test
     public void unChampionnatDoitComprendreAuMoins2Courses() {
-    	//ChampionnatItf c = new Championnat(); // MyClass is tested
-
-        //assert statements
-        //assert(c.courseQueue.size() >= 2);
-    	fail("Not yet implemented");
+    	//ChampionnatItf c = new Championnat();
+    	//assert(c.getCourses().size() >= 2);
     }
     
     @Test
     public void uneCourseDoitImposerUnType() {
-    	fail("Not yet implemented");
+    	//CourseItf c = new Course();
     }
     
     @Test
-    public void uneCourseDoitImposerUneCategorie() {
+    public void uneCourseDoitImposerUnModele() {
     	fail("Not yet implemented");
     }
     
@@ -144,9 +152,9 @@ public class TestsSujet {
     
     @Test
     public void uneMotoDoitAvoirUneCylindree() {
-    	// MotoItf m
-    	//assert(m.getCylindree() > 0);
-    	fail("Not yet implemented");
+//    	MotoItf m = new Moto();
+//    	assert(m.getCylindree() instanceof Integer);
+//    	assert(m.getCylindree() > 0);
     }
     
     @Test
