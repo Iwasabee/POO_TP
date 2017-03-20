@@ -14,27 +14,46 @@ public interface ChampionnatItf extends Serializable{
 	
 	public final int NOMBRE_COURSES_MIN = 2;
 	
-	// Retourne les courses composant le championnat.
-	// test : <? extends CourseItf> pour permettre <Course>
-	public Collection<? extends CourseItf> getCourses();
-	
-	// contraintes sur les véhicules
-	public String getType(); // moto ou voiture
-	public String getModele(); // sport, classique...
-	public int getCylindree(); // cc
-
-	/*
-	 * Affiche dans l'ordre les résultats des courses
-	 * revient à appeler dans l'ordre afficherResultats() de chaque course
+	/**
+	 * Retourne toutes les courses composant ce Championnat.
+	 * @return Collection des courses composant ce Championnat
 	 */
-	public void afficherResultatsCourses();
+	public Collection<? extends CourseItf> courses();
 	
-	// affiche les résultats du championnat 
-	// classement | pilote | score | temps total
+	/**
+	 * Retourne tous les Equipages participant à ce championnat.
+	 * @return Collection des Equipages participant à ce championnat
+	 */
+	/*
+	 * nécessaire ? je ne crois pas.
+	 */
+	//public Collection<? extends EquipageItf> equipages();
+
+	/**
+	 * Affiche les résultats du Championnat
+	 */
 	public void afficherResultats();
 	
+	/**
+	 * Affiche le vainqueur pour CHAQUE Championnat une fois toutes les courses
+	 * de tous les championnats effectuées.
+	 */
+	public void afficherVainqueurChampionnats();
+	
+	/**
+	 * Sauve ce Championnat dans un fichier (txt) de chemin nomFichier.
+	 * @param nomFichier
+	 * @return
+	 * @return null si échec
+	 */
 	public boolean sauverDansFichier(String nomFichier);
 	
+	/**
+	 * Lit le Championnat depuis un fichier (txt) de chemin nomFichier.
+	 * @param nomFichier
+	 * @return le Championnat qui était stocké dans le fichier en paramètre
+	 * @return null si échec
+	 */
 	public ChampionnatItf chargerDepuisFichier(String nomFichier);
 	
 }

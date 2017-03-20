@@ -20,13 +20,21 @@ public class Moto extends Vehicule {
 		this.poids = 0;
 	}
 	
+	public Moto(String modele) {
+		super();
+		this.poids = 0;
+		if ( ! (modeles.contains(modele))) {
+			
+		}
+	}
+	
 	// MÉTHODES
 	
 	public double getPoids() {
 		return this.poids;
 	}
 	
-	public List<String> modeles() {
+	public static List<String> modeles() {
 		return Moto.modeles;
 	}
 

@@ -13,6 +13,7 @@ import java.util.Queue;
 
 import org.tp.interfaces.CourseItf;
 import org.tp.interfaces.EquipageItf;
+import org.tp.mariano.exceptions.VehiculeException;
 
 /**
  * <ul>
@@ -32,19 +33,25 @@ public abstract class Course implements CourseItf {
 	
 	private String fichier = "";
 	
-	private static final int[] score = {10, 8, 2}; // système de points
-	
 	private static DateTimeFormatter formatageChrono = 
 			DateTimeFormatter.ofPattern("hh:mm:ss nnn");
+	
+	private int[] score = {10, 8, 2};
 	
 	// PAS de setter
 	protected int participants_min;
 	protected int participants_max;
 	
+	protected Class<? extends Vehicule> type;
+	protected String modele;
+	protected int cylindree;
+	
 	protected LocalDateTime dateDepart;
-	// Les équipages sont uniques, mais plusieurs peuvent réaliser 
-	// le même temps (s'ils arrivent ex aequo)
-	protected Hashtable<Equipage, LocalDateTime> resultats;
+	/*
+	 *  Les équipages sont uniques, mais plusieurs peuvent réaliser 
+	 *  le même temps (s'ils arrivent ex aequo)
+	 */
+	protected Hashtable<Equipage, LocalDateTime> temps;
 	
 		
 	// CONSTRUCTEUR	
@@ -54,6 +61,13 @@ public abstract class Course implements CourseItf {
 		this.courseId = Course.coursesCompte;
 		this.fichier = this.getClass().getName() + this.courseId;
 		this.dateDepart = LocalDateTime.now(); // défaut
+	}
+	
+	public Course(LocalDateTime depart){
+		Course.coursesCompte ++;
+		this.courseId = Course.coursesCompte;
+		this.fichier = this.getClass().getName() + this.courseId;
+		this.dateDepart = depart;
 	}
 	
 	public Course(int year, int month, int day, 
@@ -69,13 +83,26 @@ public abstract class Course implements CourseItf {
 	
 	// MÉTHODES
 	
-	public String getFichier() {
+	public String fichier() {
 		return this.fichier;
 	}
 	
 	public void setFichier(String fichier) {
 		this.fichier = fichier;
 	}
+	
+	public String type() {
+		return this.type.getClass().getName().toLowerCase();
+	}
+	
+	public String modele() {
+		return this.modele();
+	}
+	
+	public int cylindree() {
+		return this.cylindree;
+	}
+	
 	
 	public int points(int position) {
 		if (position > score.length)
@@ -85,66 +112,81 @@ public abstract class Course implements CourseItf {
 	
 	/**
 	 * Ajoute un Equipage comme participant à cette course.<br/>
-	 * Cette méthode N'EFFECTUE PAS LES VÉRIFICATIONS sur l'Equipage car<br/> 
-	 * ces vérifications de conformité sont effectuées par le Championnat<br/>
+	 * Attention, certaines contraintes sont à vérifier :
+	 * <ul>
+	 * <li>le type du Vehicule est conforme</li>
+	 * <li>le modele du Vehicule est conforme</li>
+	 * <li>la cylindree du Vehicule est conforme</li>
+	 * <li>(l'equipage est disponible à cette date ?)</li>
+	 * </ul>
 	 */
-	public void inscrire(Equipage e){
+	public void inscrire(Equipage e) throws VehiculeException{
 		// à l'inscription, tous les participants ont un temps à 0
-		this.resultats.put(e, this.getDepart());
+		try {
+			if (e.vehicule().type() != this.type())
+				throw new VehiculeException(VehiculeException.messageType);
+			if (e.vehicule().modele() != this.modele())
+				throw new VehiculeException(VehiculeException.messageModele);
+			if (e.vehicule().cylindree() != this.cylindree())
+				throw new VehiculeException(VehiculeException.messageCylindree);
+		} finally {}
+		this.temps.put(e, this.depart());
 	}
 	
 	/**
-	 * Classe les équipages selon leurs temps : à chaque temps (key)<br/>
-	 * est associé la liste des Equipages (value) ayant effectué ce temps<br/>
-	 * (qui revient à une liste d'un seul élément si aucun ex-aequo).<br/>
+	 * Classe les équipages selon leurs temps (une fois la course finie) : 
+	 * <ul>
+	 * <li>pour chaque temps, on déclare une clef position (Integer)</li>
+	 * <li>à chaque position, on associe en valeur une liste des équipages</li>
+	 * </ul>
+	 * (liste d'un seul élément si aucun ex-aequo).<br/>
 	 * 
 	 * @return Hashtable< LocalDateTime, List< Equipage > > classement
 	 */
-	public Hashtable<LocalDateTime, List<Equipage>> classement() {
+	public Hashtable<Integer, List<Equipage>> classement() {
 		/*
 		 *  En ajoutant les temps dans la PriorityQueue, ils sonts classés
-		 *  selon l'ordre naturel (comparator) de LocalDteTime et donc
+		 *  selon l'ordre naturel (comparator) de LocalDteTime, et donc
 		 *  du plus court au plus long
 		 */
 		Queue<LocalDateTime> temps = new PriorityQueue<LocalDateTime>();
-		temps.addAll(resultats.values());
+		temps.addAll(this.temps.values());
 		
-		Hashtable<LocalDateTime, List<Equipage>> classement = 
-				new Hashtable<LocalDateTime, List<Equipage>>();
+		Hashtable<Integer, List<Equipage>> classement = 
+				new Hashtable<Integer, List<Equipage>>();
 		
-		List<Equipage> enPosition = null; // liste pour les ex-aquo
+		int position = 1;
+		List<Equipage> equipages = null; // liste pour les ex-aquo
 		
 		for (LocalDateTime t : temps) {
-			enPosition = new ArrayList<Equipage>();
-			for ( Equipage e : resultats.keySet() ) {
-				if (t == resultats.get(e))
-					enPosition.add(e);
+			equipages = new ArrayList<Equipage>();
+			for ( Equipage e : this.temps.keySet() ) {
+				if (t == this.temps.get(e))
+					equipages.add(e);
 			}
-			classement.put(t, enPosition);
+			classement.put(position, equipages);
 		}
 		return classement;
 	}
-	
-	
 	// MÉTHODES D'INTERFACE
 	
 	@Override
-	public int getParticipantsMin() {
+	public int participantsMin() {
 		return this.participants_min;
 	}
 
 	@Override
-	public int getParticipantsMax() {
+	public int participantsMax() {
 		return this.participants_max;
 	}
 
 	@Override
-	public LocalDate getDate() {
+	public LocalDate date() {
 		return this.dateDepart.toLocalDate();
 	}
 	
 	@Override
-	public LocalDateTime getDepart() {
+	public LocalDateTime depart() {
 		return this.dateDepart;
 	}
 
@@ -154,17 +196,16 @@ public abstract class Course implements CourseItf {
 	 *  (HashMap allows one null key and any number of null values.)</i>
 	 *  @return Collection< Equipage >, éventuellement vide, jamais null
 	 */ 
-	@Override
-	public Collection<Equipage> getEquipages() {
-		if (this.resultats == null)
-			this.resultats = new Hashtable<Equipage, LocalDateTime>();
-		return resultats.keySet();
+	public Collection<Equipage> equipages() {
+		if (this.temps == null)
+			this.temps = new Hashtable<Equipage, LocalDateTime>();
+		return temps.keySet();
 	}
 
 
 	@Override
 	public void entrerResultats() {
-		for (EquipageItf e : this.getEquipages()) {
+		for (EquipageItf e : this.equipages()) {
 			// TODO
 		}
 	}
@@ -172,12 +213,6 @@ public abstract class Course implements CourseItf {
 	@Override
 	public void afficherResultats() {
 		// TODO
-		for(LocalDateTime t : this.classement().keySet()) {			
-			String ligne = t.format(Course.formatageChrono);
-			//t = t + 
-			//String pilote = classement
-			//System.out.println(ligne);
-		}
 	}
 
 	@Override
@@ -187,3 +222,5 @@ public abstract class Course implements CourseItf {
 	}
 
 }
+
+	

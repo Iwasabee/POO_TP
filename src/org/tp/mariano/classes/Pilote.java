@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.tp.interfaces.PiloteItf;
-import org.tp.mariano.exceptions.PasMajeurException;
+import org.tp.mariano.exceptions.PiloteException;
 
 public class Pilote implements PiloteItf {
 	
@@ -19,19 +19,21 @@ public class Pilote implements PiloteItf {
 	
 	private static final long serialVersionUID = 214171758734551995L;
 
+	// 5
 	private String nom;
 	private String prenom;
 	private String nationalite;
 	private LocalDate dateDeNaissance; 
-	private List<String> permis; // "voiture", "moto"
+	private List<String> permis; // "voiture", "moto"...
 
 	
 	// CONSTRUCTEURS
 
+	// init vide
 	public Pilote() {
 		pilotesCompte ++;
 		this.piloteId = pilotesCompte;
-		this.fichier = "pilote n° " + this.piloteId;
+		this.fichier = "pilote" + this.piloteId;
 		this.nom = "pilote n° " + this.piloteId;
 		this.prenom = "";
 		this.nationalite = "";
@@ -39,22 +41,15 @@ public class Pilote implements PiloteItf {
 		this.permis = Arrays.asList("");
 	}
 	
+	// init total
 	public Pilote (String nom, String prenom, String nationalite, 
 			LocalDate dateDeNaissance, List<String> permis)
-	throws PasMajeurException {
-		try {
-			Period age = Period.between(dateDeNaissance, LocalDate.now());
-			if (age.getYears() < 18)
-				throw (new PasMajeurException());
-			this.nom = nom;
-			this.prenom = prenom;
-			this.nationalite = nationalite;
-			this.dateDeNaissance = dateDeNaissance;
-			this.permis = permis;
-		} catch (PasMajeurException e) {
-			System.err.println(e.getMessage());
-		}
-
+	throws PiloteException {
+		this.nom = nom;
+		this.prenom = prenom;
+		this.nationalite = nationalite;
+		this.dateDeNaissance = dateDeNaissance;
+		this.permis = permis;
 	}
 	
 	// MÉTHODES
@@ -66,50 +61,42 @@ public class Pilote implements PiloteItf {
     public int PiloteId(){
         return piloteId;
     }
-	
-	// permet l'accès sécurisé aux permis : retourne une liste vide si null
-	public List<String> permis() {
-		if (this.permis == null)
-			this.permis = new ArrayList<String>();
-		return (List<String>)this.permis;
-	}
-	
+    
+
 	// MÉTHODES D' INTERFACE
 
 	@Override
-	public String getNom() {
+	public String nom() {
 		return this.nom;
 	}
 
 	@Override
-	public String getPrenom() {
+	public String prenom() {
 		return this.prenom;
 	}
 
 	@Override
-	public int getAge() {
+	public int age() {
 		Period p = Period.between(this.dateDeNaissance, LocalDate.now());
 		int age = p.getYears();
 		return age;
 	}
 
 	@Override
-	public String getNationalite() {
+	public String nationalite() {
 		return this.nationalite;
 	}
 
-	@Override
-	public boolean hasPermisVoiture() {
-		if (permis.contains("voiture"))
-			return true;
-		return false;
+	/**
+	 *  Permet l'accès sécurisé aux permis que le Pilote a :<br/>
+	 *  ne retourne JAMAIS null.
+	 *  @return List < String > permis
+	 *  @return List < String > vide si le Pilote n'a aucun permis
+	 */
+    @Override
+	public List<String> permis() {
+		if (this.permis == null)
+			this.permis = new ArrayList<String>();
+		return this.permis;
 	}
-
-	@Override
-	public boolean hasPermisMoto() {
-		if (permis().contains("moto"))
-			return true;
-		return false;
-	}
-
 }

@@ -17,20 +17,20 @@ public interface CourseItf extends Serializable {
 	 * Date à laquelle s'est déroulée ou se déroulera cette course<br/>
 	 * @return LocalDate : yyyy-MM-dd
 	 */
-	public LocalDate getDate();
+	public LocalDate date();
 	/**
 	 * Date précise du départ 
 	 * @return LocalDateTime : yyyy MM dd hh mm ss SSS
 	 */
-	public LocalDateTime getDepart();
+	public LocalDateTime depart();
 	
 	// autorise les doublons (temps 00:00 avant la course)
 	// mais PAS les valeurs null
-	public Collection<? extends EquipageItf> getEquipages();
+	public Collection<? extends EquipageItf> equipages();
 	
 	// contraintes
-	public int getParticipantsMin();
-	public int getParticipantsMax();
+	public int participantsMin();
+	public int participantsMax();
 	
 	// Entrer les temps pour tous les participants
 	public void entrerResultats();

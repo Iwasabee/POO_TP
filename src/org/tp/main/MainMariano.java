@@ -62,14 +62,14 @@ public class MainMariano {
 			position = new ArrayList<String>();
 			for ( PiloteItf p : classement.keySet() ) {
 				if (classement.get(p) == t) {
-					position.add(p.getNom());
+					position.add(p.nom());
 				}
 			}
 			c.put(t.getMinute(), position);
 		}
 		
 		for (PiloteItf p : classement.keySet()) {
-			test = test + p.getNom() + " "+ classement.get(p).getMinute();
+			test = test + p.nom() + " "+ classement.get(p).getMinute();
 			test = test + "\n";
 		}
 		

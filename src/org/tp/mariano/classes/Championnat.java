@@ -7,13 +7,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Arrays;
+import java.time.LocalDate;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
 import org.tp.interfaces.ChampionnatItf;
-import org.tp.interfaces.VehiculeItf;
-import org.tp.mariano.exceptions.TypeException;
+import org.tp.mariano.exceptions.ChampionnatException;
 
 /**
  * Un Championnat est composé de Courses, au minimum 2, auxquelles participent 
@@ -37,64 +36,113 @@ public class Championnat implements ChampionnatItf{
 	
 	private static final long serialVersionUID = 4256717921797117801L;
 	
-	// types connus
-	private static final String[] types = {"moto", "voiture"};
-	
 	private String nom;
 	// ordonnée par la date de départ des courses
 	private PriorityQueue<Course> courses; 
+	private boolean enCours; // si true, empêche l'ajout de course ou de participant
 	
-	// contraintes
-	private Class<? extends Vehicule> type; // précise le type de véhicule (Voiture, Moto)
-	private int cylindree; // précise la cylindrée autorisé
-	private String modele; // véhicule sportif, classique...
-		
 	// CONTRUCTEURS
 	
-	/*
-	 * Un Championnat peut être instancié "vide" mais ne pourra être lancé
-	 * que s'il remplit les conditions
+	/**
+	 * Un Championnat peut être instancié "vide".<br/>
+	 * Dans ce cas, la première Course ajoutée fournit les contraintes<br/>
+	 * (type, modele, cylindree, nombres max et min de participants...)<br/>
+	 * Un championnat ne pourra être lancé s'il ne remplit pas les conditions<br/>
+	 * de nombre minimal de course (2) et de de participants (variable).<br/>
+	 * 
 	 */
 	public Championnat() {
 		this.nom = "";
-		this.courses = null;
-		this.type = null;
-		this.cylindree = 0;
-		this.modele = "";
+		this.courses = new PriorityQueue<Course>();
 	}
-
+	
+	
 	// MÉTHODES
 	
 	@Override
 	public String toString() {
-		return "Championnat [courses = " + courses + 
-				"\ntype=" + type + 
-				"\ncylindree=" + cylindree + 
-				"\nmodele=" + modele +
-				"]";
+		return "Championnat : " + this.nom +
+				"\ncourses : " + courses + 
+				"\n";
 	}
 	
-	public String getNom() {
+	public String nom() {
 		return this.nom;
 	}
-
-	public boolean setModele(String modele) {
-		this.modele  = modele;
-		return true;
+	
+	public String type() {
+		if (this.courses.isEmpty() || (this.courses == null) )
+			return null;
+		return this.courses.peek().type();
+	}
+	
+	public String modele() {
+		if (this.courses.isEmpty() || (this.courses == null) )
+			return null;
+		return this.courses.peek().modele();
 	}
 
-	public boolean setCylindree(int cylindree) {
-		this.cylindree = cylindree;
+	
+	public Integer cylindree() {
+		if (this.courses.isEmpty() || (this.courses == null) )
+			return null;
+		return this.courses.peek().cylindree();
+	}
+	
+	/**
+	 * Vérifie si on peut planifier une Course de ce Championnat à cette date.
+	 * @param date
+	 * @return true si aucune autre course du Championnat n'a lieu à cette date.
+	 * @return false si une course de ce championnat a déjà lieu à cette date.
+	 */
+	public boolean dateDisponible(LocalDate date) {
+		for (Course course : this.courses) {
+			if ( course.date().compareTo(date) == 0 )
+					return false;
+		}
 		return true;
+	}
+	
+	/**
+	 * Pour une Course donnée, vérifie qu'elle respecte les contraintes de ce<br/>
+	 * Championnat. S'il ne contient aucune course, elle est acceptée.
+	 * <ul>
+	 * <li>le type de Vehicule</li>
+	 * <li>le modele de Vehicule</li>
+	 * <li>la cylindree de Vehicule</li>
+	 * </ul>
+	 * @param Course course : la course à tester
+	 * @return true si la Course peut être intégrée au Championnat
+	 * @return false si au moins une des contraintes n'est pas respectée
+	 * 
+	 */
+	public boolean courseConforme(Course course) {
+		if ( (course.type() == this.type()) || (this.type() == null) )
+			return true;
+		return false;
 	}
 	
 	// contrainte : 2 courses ne doivent pas se dérouler le même jour
-	public boolean ajouterCourse(Course nouvelle) {
-		for (Course course : this.courses) {
-			if ( nouvelle.getDate().compareTo(course.getDate()) == 0 )
-					return false;
-		}
-		return courses.add(nouvelle);
+	/**
+	 * Ajouter une Course à un Championnat. Plusieurs contraintes :
+	 * <ul>
+	 * <li>2 courses ne peuvent pas se dérouler à la même date</li>
+	 * <li>le type de Vehicule imposé par la course doit être conforme</li>
+	 * <li>le modele de Vehicule imposé par la course doit être conforme</li>
+	 * <li>la cylindree de Vehicule imposé par la course doit être conforme </li>
+	 * </ul>
+	 * @param nouvelle
+	 * @return
+	 */
+	public void ajouterCourse(Course course) throws ChampionnatException {
+		try {
+			if (course == null)
+				throw new NullPointerException();
+			if (! (courseConforme(course)) )
+				throw new ChampionnatException(ChampionnatException.messageCourse);
+			if (! (this.dateDisponible(course.date())) )
+				throw new ChampionnatException(ChampionnatException.messageDate);
+		} finally{};
 	}
 	
 	// MÉTHODES D'INTERFACE
@@ -104,37 +152,20 @@ public class Championnat implements ChampionnatItf{
 	 * Renvoie une queue vide si CourseQueue n'était pas créée
 	 */
 	@Override
-	public Queue<Course> getCourses() {
+	public Queue<Course> courses() {
 		if (this.courses == null) 
 			this.courses = new PriorityQueue<Course>();
-		return this.courses;
-	}
-
-	@Override
-	public String getType() {
-		return this.type.getName();
-	}
-
-	@Override
-	public String getModele() {
-		return this.modele;
-	}
-
-	@Override
-	public int getCylindree() {
-		return this.cylindree;
-	}
-
-	@Override
-	public void afficherResultatsCourses() {
-		// TODO Auto-generated method stub
-
+		return (Queue<Course>) this.courses;
 	}
 
 	@Override
 	public void afficherResultats() {
 		// TODO Auto-generated method stub
-
+	}
+	
+	@Override
+	public void afficherVainqueurChampionnats() {
+		// TODO Auto-generated method stub
 	}
 	
 	@Override

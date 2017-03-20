@@ -1,6 +1,5 @@
 package org.tp.mariano.classes;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.tp.interfaces.VehiculeItf;
@@ -30,8 +29,6 @@ public abstract class Vehicule implements VehiculeItf {
 	
 	private String fichier = "";
 	
-	protected List<String> modeles;
-	
 	protected double vitesseMax;
 	protected int cylindree;
 	protected String modele;
@@ -55,42 +52,36 @@ public abstract class Vehicule implements VehiculeItf {
 	public String toString() {
 		return ("Vehicule [" +
 				"vehiculeId=" + vehiculeId + 
-				"\nmodeles=" + modeles + 
 				"\nvitesseMax=" + vitesseMax + 
 				"\ncylindree=" + cylindree + 
-				"\nmodele=" + modele + "]"
-				);
+				"\n");
 	}
 	
 	
 	public String fichier(){
 		return this.fichier;
 	}
-
-
-	/**
-	 * 
-	 * @return liste des modeles possibles pour ce type
-	 */
-	public List<String> modeles(){
-		return this.modeles;
-	}
 	
 	
 	// MÉTHODES D'INTERFACE
 
 	@Override
-	public double getVitesseMax() {
+	public String type() {
+		return this.getClass().getName().toLowerCase();
+	}
+	
+	@Override
+	public double vitesseMax() {
 		return this.vitesseMax;
 	}
 
 	@Override
-	public int getCylindree() {
+	public int cylindree() {
 		return this.cylindree;
 	}
 
 	@Override
-	public String getModele() {
+	public String modele() {
 		return this.modele;
 	}
 
