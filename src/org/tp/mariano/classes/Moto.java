@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Moto extends Vehicule {
 	
-	// ATTRIBUTS
+	// ---------- ATTRIBUTS
 	
 	private static final long serialVersionUID = -8711150777346661042L;
 	
@@ -13,7 +13,7 @@ public class Moto extends Vehicule {
 	
 	private double poids;
 	
-	// CONSTRUCTEURS
+	// ---------- CONSTRUCTEURS
 	
 	public Moto() {
 		super();
@@ -28,7 +28,7 @@ public class Moto extends Vehicule {
 		}
 	}
 	
-	// MÉTHODES
+	// ---------- MÉTHODES
 	
 	public double getPoids() {
 		return this.poids;

@@ -1,7 +1,5 @@
 package org.tp.mariano.classes;
 
-import java.util.List;
-
 import org.tp.interfaces.VehiculeItf;
 
 /**
@@ -20,7 +18,7 @@ import org.tp.interfaces.VehiculeItf;
  */
 public abstract class Vehicule implements VehiculeItf {
 	
-	// ATTRIBUTS
+	//----------  ATTRIBUTS
 	
 	private static final long serialVersionUID = 1066567529758464271L;
 	
@@ -34,7 +32,7 @@ public abstract class Vehicule implements VehiculeItf {
 	protected String modele;
 	
 	
-	// CONSTRUCTEUR
+	// ---------- CONSTRUCTEUR
 	
 	public Vehicule () {
 		vehiculesCompte ++;
@@ -50,6 +48,7 @@ public abstract class Vehicule implements VehiculeItf {
 	
 	@Override
 	public String toString() {
+		//TODO >> Moto Voiture
 		return ("Vehicule [" +
 				"vehiculeId=" + vehiculeId + 
 				"\nvitesseMax=" + vitesseMax + 
@@ -62,8 +61,20 @@ public abstract class Vehicule implements VehiculeItf {
 		return this.fichier;
 	}
 	
+	public void setVitesseMax(double v) {
+		this.vitesseMax = v;
+	}
+
+	public void setCylindree(int c) {
+		this.cylindree = c;
+	}
+
+	public void setModele(String m) {
+		this.modele = m;
+	}
 	
-	// MÉTHODES D'INTERFACE
+	
+	// ---------- MÉTHODES D'INTERFACE
 
 	@Override
 	public String type() {

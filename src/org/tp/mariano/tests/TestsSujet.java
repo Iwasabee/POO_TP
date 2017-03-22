@@ -107,13 +107,8 @@ public class TestsSujet {
     
     @Test
     public void lesPilotesDoiventGagnerDesPointsParCourse() {
-//    	ChampionnatItf champ = new Championnat();
-//    	champ.setType("moto");
-//    	CourseItf course = new CourseMoto();
-    	
-    	//assertEquals(10, course.get(1).getScore())
-    	//assertEquals(8, course.get(1).getScore())
-    	//assertEquals(2, course.get(3).getScore())
+    	ChampionnatItf champ = new Championnat();
+    	CourseItf course = new CourseMoto();
     }
     
     @Test
@@ -123,7 +118,6 @@ public class TestsSujet {
     	//assert(v.getCylindree() > 0);
     	fail("Not yet implemented");
     }
-    
     
     @Test
     public void uneVoitureDoitAvoirUnNombreDeRouesMotrices() {

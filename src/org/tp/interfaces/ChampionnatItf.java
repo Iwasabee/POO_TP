@@ -12,7 +12,16 @@ import java.util.Collection;
 
 public interface ChampionnatItf extends Serializable{
 	
+	
+	// CONSTANTES
+	
 	public final int NOMBRE_COURSES_MIN = 2;
+	
+	
+	// MÉTHODES
+	
+	@Override
+	public String toString();
 	
 	/**
 	 * Retourne toutes les courses composant ce Championnat.
@@ -28,6 +37,11 @@ public interface ChampionnatItf extends Serializable{
 	 * nécessaire ? je ne crois pas.
 	 */
 	//public Collection<? extends EquipageItf> equipages();
+	
+	// ??
+//	public void ajouterCourse(Class<? extends CourseItf> course);
+//	
+//	public void enleverCourse(Class<? extends CourseItf> course);
 
 	/**
 	 * Affiche les résultats du Championnat

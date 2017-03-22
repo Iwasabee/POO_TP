@@ -12,6 +12,9 @@ import java.util.Collection;
  */
 public interface CourseItf extends Serializable {	
 	
+	@Override
+	public String toString();
+	
 	// LocalDate standard JDK 8
 	/**
 	 * Date à laquelle s'est déroulée ou se déroulera cette course<br/>

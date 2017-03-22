@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  */
 public class CourseMoto extends Course {
 	
-	// ATTRIBUTS	
+	// ---------- ATTRIBUTS	
 	
 	private static final long serialVersionUID = 3588347861377038534L;
 
@@ -23,18 +23,34 @@ public class CourseMoto extends Course {
 	}
 	
 	
-	// CONSTRUCTEUR(S)
+	// ---------- CONSTRUCTEURS
 	public CourseMoto(){
 		super();
+		this.type = Moto.class;
 	}
 	
 	public CourseMoto(LocalDateTime depart){
 		super(depart);
+		this.type = Moto.class;
 	}
 	
 	public CourseMoto(int year, int month, int day,
 			int hour, int minutes, int seconds, int nanoseconds){
 		super(year, month, day, hour, minutes, seconds, nanoseconds);
+		this.type = Moto.class;
+	}
+	
+	// ---------- MÉTHODES
+	
+	@Override
+	public String toString() {
+		String str = super.toString() + (
+				"type : " + this.type() +
+				"\nmodèle : " + this.modele() +
+				"\ncylindrée : " + this.cylindree() +
+				"\n"
+				);
+		return str;
 	}
 	
 }

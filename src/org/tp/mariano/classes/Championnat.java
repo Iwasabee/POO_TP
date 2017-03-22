@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -32,16 +35,27 @@ import org.tp.mariano.exceptions.ChampionnatException;
  */
 public class Championnat implements ChampionnatItf{
 	
-	// ATTRIBUTS
+	// ---------- ATTRIBUTS
 	
 	private static final long serialVersionUID = 4256717921797117801L;
 	
+	// public final int NOMBRE_COURSES_MIN = 2; // ex S1
+	
+	// 25 nationalités
+	private List<String> nationalites = Arrays.asList(
+			"Angleterre", "Belgique", "Chine", "Danemark", "Espagne",
+			"France", "Guatemala", "Hongrie", "Irlande", "Japon",
+			"Kenia", "Lituanie", "Maroc", "Nouvelle-Zélande", "Ouganda", 
+			"Portugal", "Quatar", "Russie", "Suisse", "Tibet",
+			"Uruguay", "Vénézuela", "Wallis-et-Futuna", "Yémen", "Zambie"
+			);
+	
 	private String nom;
 	// ordonnée par la date de départ des courses
-	private PriorityQueue<Course> courses; 
-	private boolean enCours; // si true, empêche l'ajout de course ou de participant
+	private PriorityQueue<Course> courses; // ex S1
+	//private boolean enCours; // TODO si true, empêche l'ajout de course ou de participant
 	
-	// CONTRUCTEURS
+	// ---------- CONTRUCTEURS
 	
 	/**
 	 * Un Championnat peut être instancié "vide".<br/>
@@ -57,13 +71,15 @@ public class Championnat implements ChampionnatItf{
 	}
 	
 	
-	// MÉTHODES
+	// ---------- MÉTHODES
 	
 	@Override
 	public String toString() {
-		return "Championnat : " + this.nom +
-				"\ncourses : " + courses + 
-				"\n";
+		String str = "Championnat : " + this.nom;
+		for (Course c : this.courses()) {
+			str = str + "\n" + c.toString();
+		}
+		return str;
 	}
 	
 	public String nom() {
@@ -87,6 +103,12 @@ public class Championnat implements ChampionnatItf{
 		if (this.courses.isEmpty() || (this.courses == null) )
 			return null;
 		return this.courses.peek().cylindree();
+	}
+	
+	public List<String> nationalites() {
+		if (this.nationalites == null)
+			return new ArrayList<String>();
+		return this.nationalites;
 	}
 	
 	/**
@@ -145,7 +167,7 @@ public class Championnat implements ChampionnatItf{
 		} finally{};
 	}
 	
-	// MÉTHODES D'INTERFACE
+	// ---------- MÉTHODES D'INTERFACE
 
 	/**
 	 * Renvoie la liste (queue) des courses du championnat
@@ -157,11 +179,26 @@ public class Championnat implements ChampionnatItf{
 			this.courses = new PriorityQueue<Course>();
 		return (Queue<Course>) this.courses;
 	}
+	
+//	@Override
+//	public void ajouterCourse(Class<? extends CourseItf> course) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public void enleverCourse(Class<? extends CourseItf> course) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 
 	@Override
 	public void afficherResultats() {
-		// TODO Auto-generated method stub
+		for (Course c : this.courses) {
+			c.arriveeCourse();
+		}
 	}
+
 	
 	@Override
 	public void afficherVainqueurChampionnats() {
@@ -222,5 +259,8 @@ public class Championnat implements ChampionnatItf{
 		}
 		return c;
 	}
+
+
+
 
 }

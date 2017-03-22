@@ -5,23 +5,23 @@ import java.util.List;
 
 public class Voiture extends Vehicule {
 
-	// ATTRIBUTS
+	// ---------- ATTRIBUTS
 	private static final long serialVersionUID = -1452834441812244728L;
 	
 	private static List<String> modeles = Arrays.asList("sport", "enduro", "trial");
 	
 	private String carburant;
 	
-	// CONSTRUCTEUR
+	// ---------- CONSTRUCTEUR
 	
 	public Voiture(){
 		super();
 		this.carburant = "";
 	}
 	
-	// MÉTHODES
+	//----------  MÉTHODES
 	
-	public List<String> modeles(){
+	public static List<String> modeles(){
 		return Voiture.modeles;
 	}
 	

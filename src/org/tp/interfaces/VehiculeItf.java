@@ -14,11 +14,10 @@ import java.io.Serializable;
  * L'interface impose donc des getters (syntaxe simple : attribut() ).
  */
 public interface VehiculeItf extends Serializable{
-
-	/**
-	 * 
-	 * @return
-	 */
+	
+	@Override
+	public String toString();
+	
 	public String type(); // correspond par exemple à "moto", "voiture"...
 	public double vitesseMax();
 	public int cylindree();

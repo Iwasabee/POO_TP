@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
@@ -12,7 +13,8 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 import org.tp.interfaces.CourseItf;
-import org.tp.interfaces.EquipageItf;
+import org.tp.interfaces.VehiculeItf;
+import org.tp.mariano.exceptions.InscriptionException;
 import org.tp.mariano.exceptions.VehiculeException;
 
 /**
@@ -24,7 +26,7 @@ import org.tp.mariano.exceptions.VehiculeException;
  */
 public abstract class Course implements CourseItf {
 	
-	// ATRIBUTS
+	// ---------- ATRIBUTS
 	
 	private static final long serialVersionUID = 714618350493019619L;
 	
@@ -34,9 +36,9 @@ public abstract class Course implements CourseItf {
 	private String fichier = "";
 	
 	private static DateTimeFormatter formatageChrono = 
-			DateTimeFormatter.ofPattern("hh:mm:ss nnn");
+			DateTimeFormatter.ofPattern("hh:mm:ss:SSS");
 	
-	private int[] score = {10, 8, 2};
+	private List<Integer> score = Arrays.asList(10, 8, 2); // système de score
 	
 	// PAS de setter
 	protected int participants_min;
@@ -47,14 +49,13 @@ public abstract class Course implements CourseItf {
 	protected int cylindree;
 	
 	protected LocalDateTime dateDepart;
-	/*
-	 *  Les équipages sont uniques, mais plusieurs peuvent réaliser 
-	 *  le même temps (s'ils arrivent ex aequo)
-	 */
-	protected Hashtable<Equipage, LocalDateTime> temps;
+	
+	protected Hashtable<Equipage, LocalDateTime> resultats;
+	
+	protected boolean inscriptionsOuvertes;
 	
 		
-	// CONSTRUCTEUR	
+	// ---------- CONSTRUCTEUR	
 	
 	public Course(){
 		Course.coursesCompte ++;
@@ -81,14 +82,31 @@ public abstract class Course implements CourseItf {
 	}
 	
 	
-	// MÉTHODES
+	// ---------- MÉTHODES
+	
+	/**
+	 * Affiche le nom de la course et la date de départ, le reste <br/>
+	 * (type, modele, cylindree) est relayé par les classes filles <br/>
+	 * non abstraite. <br/>
+	 */
+	@Override
+	public String toString() {
+		return ("Course n°" + courseId + 
+				"\nDépart : " + date().format(formatageChrono) + 
+				"\n"
+				);
+	}	
 	
 	public String fichier() {
 		return this.fichier;
 	}
-	
+
 	public void setFichier(String fichier) {
 		this.fichier = fichier;
+	}
+	
+	public void setDateDepart(LocalDateTime dateDepart) {
+		this.dateDepart = dateDepart;
 	}
 	
 	public String type() {
@@ -103,38 +121,141 @@ public abstract class Course implements CourseItf {
 		return this.cylindree;
 	}
 	
+	/**
+	 * Cette méthode indique si l'inscription d'un équipage à cette course <br>
+	 * est ouverte ou non. L'inscription est fermée notamment si : 
+	 * <ul>
+	 * <li>le nombre max de participants pour cette Course est atteint</li>
+	 * <li>la date limite d'inscription est atteinte, ici la date même</li>
+	 * </ul>
+	 * 
+	 */
+	public boolean inscriptionsOuvertes() 
+			throws InscriptionException {
+		// les inscriptions peuvent être fermées par le Championnat
+		if (this.inscriptionsOuvertes == false)
+			return false;
+		if (LocalDate.now().isAfter(this.date()) || 
+				LocalDate.now().isEqual(this.date())) {
+			throw new InscriptionException(InscriptionException.messageDate);
+		}
+		// cas où le nombre de participants max est atteint
+		if (this.resultats.size() == this.participantsMax()) {
+			throw new InscriptionException(InscriptionException.messageLimite);
+		}
+		return true;
+	}
 	
-	public int points(int position) {
-		if (position > score.length)
-			return 0;
-		return score[position];
+	public void setInscriptionsOuvertes(boolean etat) {
+		this.inscriptionsOuvertes = etat;
 	}
 	
 	/**
-	 * Ajoute un Equipage comme participant à cette course.<br/>
-	 * Attention, certaines contraintes sont à vérifier :
+	 *  Les équipages seront classés selon leur temps d'arrivée.<br/>
+	 *  <i>Hashtable DOES NOT ALLOW null keys or values.<br/>
+	 *  (HashMap allows one null key and any number of null values.)</i>
+	 *  @return Collection< Equipage >, éventuellement vide, jamais null
+	 */ 
+	public Hashtable<Equipage, LocalDateTime> resultats() {
+		if (this.resultats == null) {
+			this.resultats = new Hashtable<Equipage, LocalDateTime>();
+		}
+		return this.resultats;
+	}
+	
+	/**
+	 * Classe les temps réalisés par les Equipages du plus court au plus long.
+	 * @return Queue<LocalDateTime> temps
+	 */
+	private Queue<LocalDateTime> temps(){
+		Queue<LocalDateTime> temps = new PriorityQueue<LocalDateTime>();
+		temps.addAll(this.resultats.values());
+		return temps;
+	}
+	
+	/**
+	 * Ajoute un Equipage comme participant à cette course à condition <br>
+	 * que certaines contraintes soient vérifiées : <br>
 	 * <ul>
-	 * <li>le type du Vehicule est conforme</li>
-	 * <li>le modele du Vehicule est conforme</li>
-	 * <li>la cylindree du Vehicule est conforme</li>
+	 * <li>S2 : le type du Vehicule est conforme</li>
+	 * <li>S2 : le modele du Vehicule est conforme</li>
+	 * <li>S2 : la cylindree du Vehicule est conforme</li>
+	 * <li>S5 : une course de moto est limitée à 20 participants</li>
+	 * <li>S5 : une course de voiture est limitée à 16 participants</li>
 	 * <li>(l'equipage est disponible à cette date ?)</li>
 	 * </ul>
 	 */
-	public void inscrire(Equipage e) throws VehiculeException{
-		// à l'inscription, tous les participants ont un temps à 0
+	public void inscrire(Equipage e) 
+			throws VehiculeException, InscriptionException{
+		//TODO
+		// à l'inscription, tous les participants n'ont effectué aucun temps
+		// l'inscription peut être rejetée
 		try {
-			if (e.vehicule().type() != this.type())
-				throw new VehiculeException(VehiculeException.messageType);
-			if (e.vehicule().modele() != this.modele())
-				throw new VehiculeException(VehiculeException.messageModele);
-			if (e.vehicule().cylindree() != this.cylindree())
-				throw new VehiculeException(VehiculeException.messageCylindree);
-		} finally {}
-		this.temps.put(e, this.depart());
+			boolean conforme = this.vehiculeEstConforme(e.vehicule());
+			boolean disponible = this.inscriptionsOuvertes();
+			if (conforme && disponible)
+					this.resultats.put(e, null);
+		} // si l'inscription a échoué, on notifie l'utilisateur
+		catch(VehiculeException v){
+		} catch(InscriptionException p){
+		}finally {}
+	}
+
+	/**
+	 * Cette méthode effectue les vérifications des informations requises <br>
+	 * pour que le Vehicule puisse concourir dans une Course ou un Championnat. <br>
+	 * On vérifie notamment que tous les champs définissant le Veshicule <br>
+	 * selon son type (Moto, Voiture) ont été renseignés. <br>
+	 * <ul>
+	 * <li>S2 : type de véhicule</li>
+	 * <li>S2 : modèle, dépend du type</li>
+	 * <li>S2 : cylindrée</li>
+	 * </ul>
+	 * S13 : Voiture -> carburant, nombre de roues motrices
+	 * S14 : Moto -> poids
+	 * 
+	 * @return true si le véhicule est conforme
+	 * @see 
+	 */
+	public boolean vehiculeEstConforme(VehiculeItf v) 
+			throws VehiculeException {
+		boolean conforme = true;
+		if (v.type() != this.type()) {
+			conforme = false;
+			throw new VehiculeException(VehiculeException.messageType);
+		}
+		if (v.modele() != this.modele()) {
+			conforme = false;
+			throw new VehiculeException(VehiculeException.messageModele);
+		}
+		if (v.cylindree() != this.cylindree()) {
+			conforme = false;
+			throw new VehiculeException(VehiculeException.messageCylindree);
+			}
+		return conforme;
+	}
+	
+	
+	/**
+	 * Retourne les points gagnés pour cette cours en fonction de la <br/>
+	 * position. Système de score :
+	 * <ul>
+	 * <li>10 points pour le 1er</li>
+	 * <li>8 pour le 2e</li>
+	 * <li>2 pour le 3e</li>
+	 * <li>0 pour les suivants</li>
+	 * </ul>
+	 * @param position
+	 * @return int points gagnés
+	 */
+	public int points(int position) {
+		if (position > score.size())
+			return 0;
+		return score.get(position);
 	}
 	
 	/**
-	 * Classe les équipages selon leurs temps (une fois la course finie) : 
+	 * Classe les équipages selon leurs temps (une fois la course effectuée). 
 	 * <ul>
 	 * <li>pour chaque temps, on déclare une clef position (Integer)</li>
 	 * <li>à chaque position, on associe en valeur une liste des équipages</li>
@@ -144,31 +265,36 @@ public abstract class Course implements CourseItf {
 	 * @return Hashtable< LocalDateTime, List< Equipage > > classement
 	 */
 	public Hashtable<Integer, List<Equipage>> classement() {
-		/*
+		/*(une fois la course finie) :
 		 *  En ajoutant les temps dans la PriorityQueue, ils sonts classés
-		 *  selon l'ordre naturel (comparator) de LocalDteTime, et donc
-		 *  du plus court au plus long
+		 *  selon l'ordre naturel (comparator) de LocalDateTime, et donc
+		 *  du plus court au plus long.
 		 */
-		Queue<LocalDateTime> temps = new PriorityQueue<LocalDateTime>();
-		temps.addAll(this.temps.values());
 		
 		Hashtable<Integer, List<Equipage>> classement = 
 				new Hashtable<Integer, List<Equipage>>();
 		
-		int position = 1;
+		Integer position = 0;
 		List<Equipage> equipages = null; // liste pour les ex-aquo
 		
-		for (LocalDateTime t : temps) {
+		for (LocalDateTime t : temps()) {
 			equipages = new ArrayList<Equipage>();
-			for ( Equipage e : this.temps.keySet() ) {
-				if (t == this.temps.get(e))
+			for ( Equipage e : this.resultats.keySet() ) {
+				if (t == this.resultats.get(e))
 					equipages.add(e);
 			}
 			classement.put(position, equipages);
 		}
 		return classement;
 	}
-	// MÉTHODES D'INTERFACE
+	
+	/**
+	 * 
+	 * @return Hashtable< List< Equipage >, Integer > classement
+	 */
+	
+	
+	// ---------- MÉTHODES D'INTERFACE
 	
 	@Override
 	public int participantsMin() {
@@ -189,36 +315,45 @@ public abstract class Course implements CourseItf {
 	public LocalDateTime depart() {
 		return this.dateDepart;
 	}
-
-	/**
-	 *  Les équipages seront classés selon leur temps pour la Course.<br/>
-	 *  <i>Hashtable DOES NOT ALLOW null keys or values.<br/>
-	 *  (HashMap allows one null key and any number of null values.)</i>
-	 *  @return Collection< Equipage >, éventuellement vide, jamais null
-	 */ 
+	
+	@Override
 	public Collection<Equipage> equipages() {
-		if (this.temps == null)
-			this.temps = new Hashtable<Equipage, LocalDateTime>();
-		return temps.keySet();
+		return resultats().keySet();
 	}
-
 
 	@Override
 	public void entrerResultats() {
-		for (EquipageItf e : this.equipages()) {
-			// TODO
+		LocalDateTime arrivee = null;
+		for (Equipage e : this.equipages()) {
+			//arrivee = this.arriveeAleatoire();
+			this.resultats.put(e, arrivee);
+		}
+	}
+	
+	public List<String> tableauResultats() {
+		List<String> tableau = new ArrayList<String>();
+		String ligne = "";
+		for (Integer i : this.classement().keySet()) {
+			for (Equipage e : this.classement().get(i)) {
+				ligne = i + " " + ligne + e.pilote().nom()
+						+ " " + resultats.get(e);
+				tableau.add(ligne);
+			}
+		}
+		return tableau;
+	}
+	
+	@Override
+	public void afficherResultats() {
+		for (String l : tableauResultats()) {
+			System.out.println(l);
 		}
 	}
 
 	@Override
-	public void afficherResultats() {
-		// TODO
-	}
-
-	@Override
 	public void arriveeCourse() {
-		// TODO Auto-generated method stub
-
+		this.entrerResultats();
+		this.afficherResultats();
 	}
 
 }

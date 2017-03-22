@@ -15,12 +15,15 @@ import org.tp.mariano.exceptions.PiloteException;
  */
 public class Equipage implements EquipageItf {
 	
+	
+	// ---------- ATTRIBUTS
+	
 	private static final long serialVersionUID = -3921934647760086873L;
 	
 	private PiloteItf pilote;
 	private VehiculeItf vehicule;
 	
-	// CONSTRUCTEUR
+	// ---------- CONSTRUCTEUR
 	
 	/**
 	 *  la création d'un équipage effectue certaines vérifications :
@@ -50,13 +53,13 @@ public class Equipage implements EquipageItf {
 		} finally{}; // TODO
 	}
 
-	// MÉTHODES
+	// ---------- MÉTHODES
 	
 	public boolean rentrerTemps(LocalDateTime temps) {
 		return false;
 	}
 	
-	// MÉTHODES D'INTERFACE
+	// ---------- MÉTHODES D'INTERFACE
 
 	@Override
 	public PiloteItf pilote() {

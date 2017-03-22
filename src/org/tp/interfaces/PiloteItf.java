@@ -1,6 +1,7 @@
 package org.tp.interfaces;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -13,10 +14,17 @@ import java.util.List;
  */
 public interface PiloteItf extends Serializable {
 	
+	@Override
+	public String toString();
+	
 	public String nom();
 	public String prenom();
 	public int age(); // tip : avoir une Date en attribut
 	public String nationalite();
 	public List<String> permis();
+
+//	public void setNationalite(String string);
+//	public void setPermis(List<String> permis);
+//	public void setDateDeNaissance(LocalDateTime naissance);
 
 }

@@ -58,7 +58,8 @@ public class TestsContraintes {
 	
 	@Test
 	public void deuxCoursesDUnChampionnatNeDoiventPasSeDeroulerEnMemeTemps () {
-		// on présuppose qu'une course ne dure pas plus d'un jour 
+		ChampionnatItf chm = new Championnat();
+		//chm.ajouterCourse();
 	}
 	
 	@Test

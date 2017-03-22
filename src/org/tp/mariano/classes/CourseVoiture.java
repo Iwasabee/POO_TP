@@ -1,6 +1,5 @@
 package org.tp.mariano.classes;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -24,7 +23,7 @@ public class CourseVoiture extends Course {
 	}
 	
 	
-	// CONSTRUCTEUR(S)
+	// ---------- CONSTRUCTEUR(S)
 	public CourseVoiture(){
 		super();	
 	}

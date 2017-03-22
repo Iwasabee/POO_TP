@@ -1,6 +1,6 @@
 package org.tp.mariano.exceptions;
 
-public class EquipageException extends Exception {
+public class EquipageException extends AbstractException {
 
 	private static final long serialVersionUID = 3303274610463559482L;
 

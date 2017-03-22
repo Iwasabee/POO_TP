@@ -3,7 +3,10 @@ package org.tp.interfaces;
 import java.io.Serializable;
 
 // capsule pour associer pilote et véhicule pour un Championnat
-public interface EquipageItf extends Serializable{
+public interface EquipageItf extends Serializable {
+	
+	@Override
+	public String toString();
 	
 	public PiloteItf pilote();
 	public VehiculeItf vehicule();
